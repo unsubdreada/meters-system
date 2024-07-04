@@ -19,6 +19,7 @@ coverage
 
 /cypress/videos/
 /cypress/screenshots/
+/.forreadme
 
 # Директории для кода и конфиги редактора
 .vscode/*
