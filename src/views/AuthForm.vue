@@ -83,9 +83,6 @@ export default {
         await account.createEmailPasswordSession(this.email, this.password)
         const responce = await account.get()
         if (responce) {
-          localStorage.setItem('token', responce.$idToken)
-          localStorage.setItem('email', responce.email)
-          localStorage.setItem('name', responce.name)
           authStore.set(responce)
           router.push({ name: 'CabinetPage' })
           notificationStore.showNotification('Авторизация прошла успешно!', 'success')
