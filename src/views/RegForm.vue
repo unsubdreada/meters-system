@@ -63,7 +63,7 @@ import { useIsLoadingStore, useAuthStore } from '@/stores/auth.store'
 import { useNotificationStore } from '@/stores/notification'
 import router from '../router'
 import { account } from '../utils/appwrite'
-import { v4 as uuid } from 'uuid'
+import { generateId } from '@/utils/generateId'
 
 export default {
   components: {
@@ -89,7 +89,8 @@ export default {
       const notificationStore = useNotificationStore()
       isLoadingStore.set(true)
       try {
-        await account.create(uuid(), this.email, this.password, this.name)
+        const userId = await generateId()
+        await account.create(userId, this.email, this.password, this.name)
         await account.createEmailPasswordSession(this.email, this.password)
         const responce = await account.get()
         if (responce) {
