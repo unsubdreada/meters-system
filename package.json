@@ -13,6 +13,7 @@
   "dependencies": {
     "@heroicons/vue": "^2.1.4",
     "appwrite": "^15.0.0",
+    "node-appwrite": "^13.0.0",
     "pinia": "^2.1.7",
     "uuid": "^10.0.0",
     "vue": "^3.4.29",
