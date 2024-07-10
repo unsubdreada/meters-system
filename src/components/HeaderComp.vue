@@ -28,9 +28,9 @@ export default {
   <header>
     <router-link to="/"><LogoIcon /></router-link>
     <div v-if="authStore.isAuth" class="flex space-x-5">
-      <p class="text-xl text-white font-roboto border-r-2 border-white pr-5">
-        {{ authStore.name }} ({{ authStore.email }}) [{{ authStore.userId }}]
-      </p>
+      <div>
+        <p class="text-xl text-white font-roboto">{{ authStore.name }} | {{ authStore.userId }}</p>
+      </div>
       <p
         class="text-xl text-[#38BDF8] font-roboto hover:text-white transition duration-200 cursor-pointer"
         @click="logout"
