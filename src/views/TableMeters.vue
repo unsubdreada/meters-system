@@ -96,6 +96,7 @@ export default {
               'Новое показание не может быть меньше последнего!',
               'error'
             )
+            meter.newReading = lastReading
             return
           }
         } else {
