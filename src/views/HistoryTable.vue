@@ -10,7 +10,7 @@
       <p class="text-lg text-white">Выберите счётчик:</p>
       <select v-model="selectedMeterId" class="bg-[#223054] rounded-xl p-2">
         <option v-for="meter in meters" :key="meter.meterNumber" :value="meter.meterNumber">
-          {{ meter.name }}
+          [{{ meter.type }}] {{ meter.name }}
         </option>
       </select>
     </div>
@@ -99,12 +99,20 @@ export default {
   methods: {
     async handleDeleteReading(readingId) {
       try {
-        const updateReadings = [...this.selectedMeter.readings]
-        updateReadings.splice(readingId, 1)
-        this.selectedMeter.readings = updateReadings.map((reading) => JSON.stringify(reading))
-        await deleteReading(this.selectedMeter)
-        console.log('Показание удалено')
-        this.$emit('fetchData')
+        const readingIndex = this.selectedMeter.readings.findIndex(
+          (reading) => reading.readingId === readingId
+        )
+        if (readingIndex !== -1) {
+          const updatedReadings = [...this.selectedMeter.readings]
+          updatedReadings.splice(readingIndex, 1)
+          this.selectedMeter.readings = updatedReadings
+          await deleteReading(this.selectedMeter)
+          console.log('Показание удалено')
+          this.$emit('fetchData')
+        } else {
+          console.log(this.updatedReadings)
+          console.log('Показание не найдено')
+        }
       } catch (error) {
         console.log(error)
       }
