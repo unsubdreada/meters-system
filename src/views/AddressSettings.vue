@@ -11,13 +11,13 @@
         type="text"
         placeholder="Имя"
         required
-        class="bg-[#223054] rounded-2xl p-2"
+        class="bg-[#223054] rounded-2xl p-2 outline-none"
         v-model="meterData.name"
       />
       <input
         type="text"
         placeholder="Номер счётчика"
-        class="bg-[#223054] rounded-2xl p-2"
+        class="bg-[#223054] rounded-2xl p-2 outline-none"
         v-model="meterData.meterNumber"
       />
       <select class="bg-[#223054] rounded-2xl p-2" v-model="meterData.type" required>
@@ -34,7 +34,7 @@
       </button>
     </div>
   </form>
-  <div v-if="meters.length > 0">
+  <div v-if="meters.length > 0" class="border-t-2 border-[#374A7C] p-2">
     <h1>Уже существующие счетчики:</h1>
     <div class="max-h-96 overflow-y-scroll">
       <table class="w-full">
@@ -62,14 +62,39 @@
       </table>
     </div>
   </div>
+
+  <div class="border-t-2 border-[#374A7C] p-2">
+    <h2 class="text-xl font-roboto text-white">Поделиться адресом</h2>
+    <div class="flex gap-2 items-center">
+      <p>Введите ID для поиска пользователя:</p>
+      <input
+        type="text"
+        v-model="searchUserID"
+        @input="updateSearch"
+        class="bg-[#223054] rounded-xl p-2 outline-none"
+      />
+    </div>
+    <div class="max-h-96 overflow-y-scroll">
+      <LoaderComp v-if="isLoadingStore" />
+      <div class="flex gap-3" v-for="user in searchUserStore.users" :key="user.$id">
+        <p>[ {{ user.$id }} ] {{ user.name }}</p>
+        <ShareIcon class="w-6 h-6 hover:text-blue-500 cursor-pointer" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
+import LoaderComp from '@/components/layout/LoaderComp.vue'
 import { useNotificationStore } from '@/stores/notification'
+import { useSearchUserStore } from '@/stores/searchUser.store'
+import { useIsLoadingStore } from '@/stores/auth.store'
 import { deleteMeters } from '@/utils/appwrite_db'
 import { addMeters } from '@/utils/appwrite_db'
+import { watch, ref } from 'vue'
 
 export default {
+  components: { LoaderComp },
   props: {
     address: {
       type: Object,
@@ -80,6 +105,12 @@ export default {
       required: true
     }
   },
+  computed: {
+    isLoadingStore() {
+      const isLoadingStore = useIsLoadingStore()
+      return isLoadingStore.isLoading
+    }
+  },
   data() {
     return {
       meterData: {
@@ -88,6 +119,23 @@ export default {
         type: 'ХВС'
       }
     }
+  },
+  setup() {
+    const searchUserStore = useSearchUserStore()
+    const searchUserID = ref(searchUserStore.searchUserID)
+
+    watch(searchUserID, async (newUserID) => {
+      await searchUserStore.getUsersID(newUserID)
+    })
+
+    const updateSearch = () => {
+      searchUserStore.setSearchUserID(searchUserID.value)
+      if (searchUserID.value === '') {
+        searchUserStore.users = []
+      }
+    }
+
+    return { searchUserStore, updateSearch, searchUserID }
   },
   emits: ['close', 'fetchData'],
   methods: {
