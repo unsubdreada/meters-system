@@ -65,7 +65,7 @@
 
   <div class="border-t-2 border-[#374A7C] p-2">
     <h2 class="text-xl font-roboto text-white">Поделиться адресом</h2>
-    <div class="flex gap-2 items-center">
+    <div class="flex gap-3 items-center justify-center">
       <p>Введите ID для поиска пользователя:</p>
       <input
         type="text"
@@ -74,9 +74,14 @@
         class="bg-[#223054] rounded-xl p-2 outline-none"
       />
     </div>
-    <div class="max-h-96 overflow-y-scroll">
+    <div class="max-h-96 overflow-y-scroll" v-if="searchUserStore.users.length > 0">
       <LoaderComp v-if="isLoadingStore" />
-      <div class="flex gap-3" v-for="user in searchUserStore.users" :key="user.$id">
+      <p>Найденные пользователи:</p>
+      <div
+        class="flex flex-row gap-4 justify-center py-2"
+        v-for="user in searchUserStore.users"
+        :key="user.$id"
+      >
         <p>[ {{ user.$id }} ] {{ user.name }}</p>
         <ShareIcon class="w-6 h-6 hover:text-blue-500 cursor-pointer" />
       </div>
