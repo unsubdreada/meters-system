@@ -21,7 +21,8 @@ import {
   Cog8ToothIcon,
   XCircleIcon,
   ExclamationTriangleIcon,
-  PlusIcon
+  PlusIcon,
+  ShareIcon
 } from '@heroicons/vue/24/outline'
 
 import App from './App.vue'
@@ -46,6 +47,7 @@ app.component('PencilIcon', PencilIcon)
 app.component('ExclamationTriangleIcon', ExclamationTriangleIcon)
 app.component('CheckBadgeIcon', CheckBadgeIcon)
 app.component('PlusIcon', PlusIcon)
+app.component('ShareIcon', ShareIcon)
 
 app.use(createPinia())
 app.use(router)
