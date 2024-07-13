@@ -12,19 +12,13 @@ const users = new Users(client)
 export const generateId = async () => {
   try {
     const response = await users.list()
-    const userIds = response.users.map((user) => user.$id)
-    let maxId = 0
+    const userIds = response.users.map((user) => parseInt(user.$id))
 
-    for (let userId of userIds) {
-      if (userId.startsWith('id')) {
-        const num = parseInt(userId.slice(2))
-        if (!isNaN(num) && num > maxId) {
-          maxId = num
-        }
-      }
-    }
+    const numericIds = userIds.filter((id) => !isNaN(id))
 
-    return `id${maxId + 1}`
+    const maxId = Math.max(...numericIds, 0)
+
+    return (maxId + 1).toString()
   } catch (error) {
     console.log('Не удалось получить список пользователей!', error)
   }
