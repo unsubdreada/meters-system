@@ -13,7 +13,8 @@ const users = new Users(client)
 export const useSearchUserStore = defineStore('searchUser', {
   state: () => ({
     users: [],
-    searchUserID: ''
+    searchUserID: '',
+    currentUserID: localStorage.getItem('userId')
   }),
   actions: {
     async getUsersID(userID = '') {
