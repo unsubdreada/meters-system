@@ -75,7 +75,6 @@
       />
     </div>
     <div class="max-h-96 overflow-y-scroll" v-if="searchUserStore.users.length > 0">
-      <LoaderComp v-if="isLoadingStore" />
       <p>Найденные пользователи:</p>
       <div
         class="flex flex-row gap-4 justify-center py-2"
@@ -90,16 +89,13 @@
 </template>
 
 <script>
-import LoaderComp from '@/components/layout/LoaderComp.vue'
 import { useNotificationStore } from '@/stores/notification'
 import { useSearchUserStore } from '@/stores/searchUser.store'
-import { useIsLoadingStore } from '@/stores/auth.store'
 import { deleteMeters } from '@/utils/appwrite_db'
 import { addMeters } from '@/utils/appwrite_db'
 import { watch, ref } from 'vue'
 
 export default {
-  components: { LoaderComp },
   props: {
     address: {
       type: Object,
@@ -108,12 +104,6 @@ export default {
     meters: {
       type: Array,
       required: true
-    }
-  },
-  computed: {
-    isLoadingStore() {
-      const isLoadingStore = useIsLoadingStore()
-      return isLoadingStore.isLoading
     }
   },
   data() {
