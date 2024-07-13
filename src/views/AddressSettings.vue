@@ -81,8 +81,13 @@
         v-for="user in searchUserStore.users"
         :key="user.$id"
       >
-        <p>[ {{ user.$id }} ] {{ user.name }}</p>
-        <ShareIcon class="w-6 h-6 hover:text-blue-500 cursor-pointer" />
+        <p>
+          [ {{ user.$id === searchUserStore.currentUserID ? 'Это Вы' : user.$id }} ] {{ user.name }}
+        </p>
+        <ShareIcon
+          v-if="user.$id !== searchUserStore.currentUserID"
+          class="w-6 h-6 hover:text-blue-500 cursor-pointer"
+        />
       </div>
     </div>
   </div>
