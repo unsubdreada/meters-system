@@ -87,6 +87,7 @@
         <ShareIcon
           v-if="user.$id !== searchUserStore.currentUserID"
           class="w-6 h-6 hover:text-blue-500 cursor-pointer"
+          @click="shareAddress(user.$id)"
         />
       </div>
     </div>
@@ -96,7 +97,7 @@
 <script>
 import { useNotificationStore } from '@/stores/notification'
 import { useSearchUserStore } from '@/stores/searchUser.store'
-import { deleteMeters } from '@/utils/appwrite_db'
+import { deleteMeters, shareAddress } from '@/utils/appwrite_db'
 import { addMeters } from '@/utils/appwrite_db'
 import { watch, ref } from 'vue'
 
@@ -161,6 +162,19 @@ export default {
         notificationStore.showNotification('Счётчики удалены из БД', 'success')
       } catch (error) {
         notificationStore.showNotification('Произошла ошибка при удалении счётчиков из БД', 'error')
+      }
+    },
+    async shareAddress(userID) {
+      const notificationStore = useNotificationStore()
+      try {
+        await shareAddress(this.address.$id, userID)
+        this.$emit('fetchData')
+        notificationStore.showNotification(
+          `Вы успешно поделились адресом с пользователем ID: ${userID}`,
+          'success'
+        )
+      } catch (error) {
+        notificationStore.showNotification('Произошла ошибка при поделении адреса', 'error')
       }
     }
   }

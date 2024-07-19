@@ -1,5 +1,6 @@
 import { ID } from 'appwrite'
 import { account, database, sdk } from '../utils/appwrite'
+import { Query } from 'node-appwrite'
 
 const dbID = import.meta.env.VITE_APPWRITE_DB_ID
 const collectionAddresses = import.meta.env.VITE_APPWRITE_COLLECTION_ADDRESSES
@@ -22,7 +23,7 @@ async function addAddress(address) {
   if (userID) {
     try {
       const response = await database.createDocument(dbID, collectionAddresses, ID.unique(), {
-        userID: userID,
+        userIDs: [userID],
         createdAt: new Date().toISOString(),
         addressId: ID.unique(),
         ...address // Разбор объекта address
@@ -51,13 +52,29 @@ async function getAddresses() {
   if (userID) {
     try {
       const response = await database.listDocuments(dbID, collectionAddresses, [
-        sdk.equal('userID', userID)
+        Query.contains('userIDs', userID)
       ])
       // console.log('Адреса успешно получены')
       return response.documents
     } catch (error) {
       console.log('Ошибка при получении адресов', error)
+      return []
     }
+  }
+  return []
+}
+// РАСШАРИТЬ АДРЕС
+async function shareAddress(addressId, userID) {
+  try {
+    const document = await database.getDocument(dbID, collectionAddresses, addressId)
+    const updateUserIDs = document.userIDs.includes(userID)
+      ? document.userIDs
+      : [...document.userIDs, userID]
+    await database.updateDocument(dbID, collectionAddresses, addressId, {
+      userIDs: updateUserIDs
+    })
+  } catch (error) {
+    console.log('Ошибка при добавлении пользователя к адресу', error)
   }
 }
 
@@ -133,6 +150,7 @@ export {
   addAddress,
   deleteAddress,
   getAddresses,
+  shareAddress,
   addMeters,
   deleteMeters,
   getMeters,
